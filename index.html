@@ -1,0 +1,42 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Lunar</title><style>
+body{margin:0;background:#000;color:#fff;font-family:sans-serif;padding-top:80px}
+#main-search-container{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9}
+.main-search-bar{width:300px;padding:10px;border-radius:10px;border:1px solid #222;background:#111;color:#fff;outline:none}
+#request-btn{position:fixed;top:20px;right:20px;padding:10px;border-radius:10px;background:#111;color:#fff;border:1px solid #333;cursor:pointer}
+#song-library{display:flex;flex-wrap:wrap;gap:20px;padding:20px;justify-content:center}
+.player-card{background:#111;border-radius:15px;padding:10px;width:150px;cursor:pointer}
+.artist-image{width:100%;border-radius:10px}
+#ov,#fov{position:fixed;inset:0;background:rgba(0,0,0,.95);display:none;z-index:99;align-items:center;justify-content:center;gap:40px}
+.l-col{width:40vh;text-align:center}
+#x,#fx{font-size:3rem;cursor:pointer;opacity:.5;position:absolute}
+#x{position:static}#fx{top:20px;left:20px}
+#e-img{width:100%;border-radius:20px;margin-bottom:15px}
+.row{display:flex;align-items:center;gap:10px;margin-top:10px}
+#sk{flex-grow:1;accent-color:#fff;cursor:pointer}
+.pb{background:#fff;color:#000;border:none;padding:10px 20px;border-radius:20px;font-weight:700;cursor:pointer}
+.nb{background:#222;color:#fff;border:none;width:35px;height:35px;border-radius:50%;cursor:pointer}
+#e-t{font-size:3rem;font-weight:900}
+iframe{width:80%;height:80%;border-radius:15px;border:1px solid #333}</style></head>
+<body><audio id="a"></audio>
+<button id="request-btn" onclick="v('fov',1)">REQUEST</button>
+<div id="main-search-container"><input type="text" id="sb" class="main-search-bar" placeholder="Search..."></div>
+<div id="song-library"></div>
+<div id="fov"><div id="fx" onclick="v('fov',0)">&times;</div><iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfn9KZhBJRFJ0kBD6I32BNbHyuJIMQYpnfes_YIBjRxOTMQvw/viewform?embedded=true"></iframe></div>
+<div id="ov"><div class="l-col"><div id="x" onclick="v('ov',0,1)">&times;</div><img id="e-img"><div class="row">
+<button class="nb" onclick="s(-10)">-</button><button class="pb" id="p" onclick="tp()">▶</button><button class="nb" onclick="s(10)">+</button>
+<input type="range" id="sk" value="0"></div><div style="display:flex;justify-content:space-between;opacity:.5;font-size:12px">
+<span id="cur">0:00</span><span id="dur">0:00</span></div></div><div class="r-col"><div id="e-c" style="opacity:.5"></div><div id="e-t"></div></div></div>
+<script>
+const a=document.getElementById('a'),v=(id,s,p)=> {document.getElementById(id).style.display=s?'flex':'none';if(p)a.pause()},
+songs=[{t:"I JUST MIGHT",c:"Bruno Mars",i:"1DLw7yLWq1rEuTVHmdn4Nne-w5nO62jxn",f:"Bruno%20Mars%20I%20Just%20Might%20Official%20Music%20Video.mp3"},
+{t:"SEE YOU AGAIN",c:"Tyler The Creator",i:"1PVayg3W4D0t73Itk0DIE-8VQ3zIQYnLR",f:"Tyler,%20The%20Creator%20-%20See%20You%20Again%20(Audio)%20ft.%20Kali%20Uchis.mp3"},
+{t:"PERFECT GIRL FUNK",c:"DJ Javi26",i:"1BiOXg2MKRcouERk5uLVx0hqqRjsohTMn",f:"PERFECT%20GIRL%20FUNK%20DJ%20Javi26%20x%20KIXIA%20x%20ZXVREN%20x%20SASORIIXPP.mp3"}];
+const r=l=>document.getElementById('song-library').innerHTML=l.map(s=>`<div class="player-card" onclick="op('${s.t}')"><img src="https://drive.google.com/thumbnail?id=${s.i}&sz=w1000" class="artist-image"><b>${s.t}</b></div>`).join('');
+function op(t){const s=songs.find(x=>x.t===t);document.getElementById('e-img').src=`https://drive.google.com/thumbnail?id=${s.i}&sz=w1000`;
+document.getElementById('e-t').innerText=s.t;document.getElementById('e-c').innerText=s.c;a.src=`https://github.com/MISTERCOOL27277/LunarMusic/raw/refs/heads/main/${s.f}`;v('ov',1);a.play();document.getElementById('p').innerText="||";}
+function tp(){if(a.paused){a.play();document.getElementById('p').innerText="||"}else{a.pause();document.getElementById('p').innerText="▶"}}
+function s(t){a.currentTime+=t}const f=s=>{const m=Math.floor(s/60),r=Math.floor(s%60);return m+":"+(r<10?'0':'')+r};
+a.ontimeupdate=()=>{const k=document.getElementById('sk');k.max=a.duration||0;k.value=a.currentTime;document.getElementById('cur').innerText=f(a.currentTime);if(a.duration)document.getElementById('dur').innerText=f(a.duration)};
+document.getElementById('sk').oninput=e=>a.currentTime=e.target.value;document.getElementById('sb').oninput=e=>r(songs.filter(s=>s.t.toLowerCase().includes(e.target.value.toLowerCase())));r(songs);
+</script></body></html>
+
